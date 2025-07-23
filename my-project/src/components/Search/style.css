@@ -1,0 +1,14 @@
+.searchBox input::placeholder, .searchBox input::-moz-placeholder , .searchBox input::-webkit-input-placeholder
+{
+/* color: #000 !important; */
+color: #5f5e5e !important;
+
+
+}
+
+.searchBox input::target-text
+{
+text-wrap: wrap;
+font-size: (1em, 12px);
+}
+
