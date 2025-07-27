@@ -10,7 +10,7 @@ import { error, log } from 'console';
 import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
 import dotenv from 'dotenv';
-import { data } from 'react-router-dom';
+
 
 dotenv.config();
 
