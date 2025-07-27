@@ -1,4 +1,4 @@
-import CategoryModel from "../models/category.model";
+import CategoryModel from "../models/category.model.js";
 
 import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
@@ -24,10 +24,6 @@ export const uploadImages = async (request, response) => {
 
 
 
-        //remove image from cloudinary
-
-
-
 
         const options = {
             use_filename: true,
@@ -49,8 +45,7 @@ export const uploadImages = async (request, response) => {
         }
 
         return response.status(200).json({
-            
-            avtar: imagesArr[0]
+            images: imagesArr
         });
 
     } catch (error) {
