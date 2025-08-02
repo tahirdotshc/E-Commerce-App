@@ -23,7 +23,7 @@ app.use(helmet(
 app.use("/api/v1/",product);
 
 app.use("/api/user/", userRouter);
-app.use("/api/category", categoryRouter)
+app.use("/api/category/", categoryRouter)
 
 
 
