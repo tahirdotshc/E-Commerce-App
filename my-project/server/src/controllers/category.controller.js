@@ -61,3 +61,39 @@ export const uploadImages = async (request, response) => {
 
     }
 }
+
+export async function createCategory(request, response){
+    try {
+        let category = new CategoryModel({
+            name: request.body.name,
+            images: imagesArr,
+            color: request.body.color,
+            parentId: request.body.parentId,
+            parentCatName: request.body.parentCatName,
+        });
+
+        if(!category){
+            return response.status(500).json({
+                message: "Category not created",
+                error: true,
+                success: false
+            })
+        }
+
+        category = await category.save();
+        imagesArr = [];
+        
+        return response.status(500).json({
+                message: "Category created",
+                error: false,
+                success: true,
+                category: category
+            })
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+    }
+}
