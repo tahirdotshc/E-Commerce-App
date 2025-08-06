@@ -134,3 +134,27 @@ return response.status(200).json({
  }
 
  }
+
+ export async function getCategoriesCount(request, response){
+try {
+   const categoryCount = await CategoryModel.countDocuments({parentId:undefined});
+   if(!categoryCount){
+    response.status(500).json({ 
+        success: false,
+    error: true 
+});
+
+   } 
+   else{
+    response.send({
+        categoryCount: categoryCount
+    })
+   }
+} catch (error) {
+    return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+}
+ }
