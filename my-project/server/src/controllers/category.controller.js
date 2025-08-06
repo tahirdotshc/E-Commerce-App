@@ -106,8 +106,25 @@ export async function getCategories(request, response){
     categories.forEach(cat => {
         categoryMap[cat._id] = {...cat._doc, children: []};
 
-        const rootCategories = [];
+        
     });
+
+    const rootCategories = [];
+        categories.forEach(cat => {
+            if(cat.parentId){
+                categoryMap[cat.parentId].children.push(categoryMap[cat._id]);
+            } else {
+                rootCategories.push(categoryMap[cat._id]);
+
+            }
+        });
+
+return response.status(200).json({
+           error: false,
+            success: true,
+            data: rootCategories
+        })
+
  } catch (error) {
     return response.status(500).json({
             message: error.message || error,
