@@ -199,7 +199,7 @@ try {
     const category = await CategoryModel.findById(request.params.id);
      
     if(!category){
-    response.status(500).json({ 
+    return response.status(500).json({ 
         message: "The category with the given ID was not found",
         error: true,
             success: false
