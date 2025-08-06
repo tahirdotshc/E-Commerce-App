@@ -158,3 +158,35 @@ try {
         })
 }
  }
+
+ export async function getSubCategoriesCount(request, response){
+try {
+   const categories = await CategoryModel.find();
+   if(!categories){
+    response.status(500).json({ 
+        success: false,
+    error: true 
+});
+
+   } 
+   else{
+    const subCatList = [];
+    for(let cat of categories){
+        if(cat.parentId!==undefined){
+            subCatList.push(cat);
+        }
+    }
+    
+    response.send({
+        SubcategoryCount: subCatList.length;
+    })
+
+   }
+} catch (error) {
+    return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+}
+ }
