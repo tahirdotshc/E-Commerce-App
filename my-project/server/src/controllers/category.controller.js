@@ -190,3 +190,31 @@ try {
         })
 }
  }
+
+ //get single category
+
+ export async function getCategory(request, response){
+try {
+    const category = await CategoryModel.findById(request.params.id);
+     
+    if(!category){
+    response.status(500).json({ 
+        message: "The category with the given ID was not found",
+        error: true,
+            success: false
+});
+}
+
+    return response.status(500).json({
+        error: false,
+            success: true,
+            category: category
+    })
+} catch (error) {
+    return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+} 
+}
