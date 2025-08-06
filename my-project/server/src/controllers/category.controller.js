@@ -1,6 +1,7 @@
 import CategoryModel from "../models/category.model.js";
 
 import { v2 as cloudinary } from 'cloudinary';
+import { error } from "console";
 import fs from 'fs';
 
 cloudinary.config({
@@ -217,4 +218,86 @@ try {
             success: false
         })
 } 
+}
+
+export async function removeImageFromCloudinary(request, response) {
+    const imgUrl = request.query.img;
+    const urlArr = imgUrl.split("/");
+    const image = urlArr[urlArr.length - 1]; //last value of array
+
+    const imageName = image.split(".")[0];
+
+    if (imageName) {
+        const res = await cloudinary.uploader.destroy(
+            imageName,
+            (error, result) => {
+
+            }
+        );
+        if (res) {
+            response.status(200).send(res);
+        }
+    }
+
+}
+
+export async function deleteCategory(request, response) {
+
+   
+        const category = await CategoryModel.findById(request.params.id);
+        const images = category.images;
+        let img="";
+        for (img of images) {
+            const imgUrl = img;
+            const urlArr = imgUrl.split("/");
+            const image = urlArr[urlArr.length - 1];
+
+            const imageName = image.split(".")[0];
+
+            if(imageName){
+                cloudinary.uploader.destroy(imageName, (error, result) => {
+            
+                })
+
+            }
+
+            
+            
+    
+    }
+    const subCategory = await CategoryModel.find({
+                parentId: request.params.id
+            });
+
+            for (let i=0; i < subCategory.length; i++){
+                
+                const thirdsubCategory = await CategoryModel.find({
+                    parentId: subCategory[i]._id
+            });
+
+            for(let i=0; i < thirdsubCategory.length; i++) {
+                const deletedThirdSubCat = await CategoryModel.findByIdAndDelete(thirdsubCategory[i]._id);
+                        }
+                const deleteSubCat = await CategoryModel.findByIdAndDelete(subCategory[i]._id);
+            
+        }
+
+        const deletedCat = await CategoryModel.findByIdAndDelete(request.params.id);
+
+        if(!deletedCat){
+            response.status(404).json({
+                message:"Category not found!",
+                success: false,
+                error: true
+            });
+
+
+        }
+
+        response.status(200).json({
+            success: true,
+            error: false,
+            messsage: "Category Deleted!"
+        })
+
 }
