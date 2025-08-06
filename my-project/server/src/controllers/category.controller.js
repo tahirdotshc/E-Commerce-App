@@ -97,3 +97,23 @@ export async function createCategory(request, response){
         })
     }
 }
+
+export async function getCategories(request, response){
+ try {
+    const categories = await CategoryModel.find();
+    const categoryMap = {};
+
+    categories.forEach(cat => {
+        categoryMap[cat._id] = {...cat._doc, children: []};
+
+        const rootCategories = [];
+    });
+ } catch (error) {
+    return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+ }
+
+ }
