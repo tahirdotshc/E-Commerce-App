@@ -178,7 +178,7 @@ try {
     }
     
     response.send({
-        SubcategoryCount: subCatList.length;
+        SubcategoryCount: subCatList.length
     })
 
    }
