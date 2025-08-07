@@ -65,7 +65,7 @@ export const uploadImages = async (request, response) => {
 
 export async function createProduct(request, response){
     try {
-        const product = new ProductModel({
+        let product = new ProductModel({
             name: request.body.name,
             description: request.body.description,
             images: imagesArr,
@@ -82,10 +82,30 @@ export async function createProduct(request, response){
             rating: request.body.rating,
             isFeatured: request.body.isFeatured,
             discount: request.body.discount,
-            
-            
+            productRam: request.body.productRam,
+            size: request.body.size,
+            productWeight: request.body.productWeight
             
         });
+
+        product = await product.save();
+
+        if(!product) {
+            response.status(500).json({
+                error: true,
+                success: false,
+                message: "Product Not created"
+            });
+        }
+
+        imagesArr = [];
+
+        response.status(200).json({
+                error: false,
+                success: true,
+                message: "Product created successfully"
+            });
+
     } catch (error) {
          return response.status(500).json({
             message: error.message || error,
@@ -94,4 +114,31 @@ export async function createProduct(request, response){
         })
     }
 }
+
+export async function getAllProducts(request, response){
+    try {
+        const products = await ProductModel.find();
+
+        if(!products){
+            response.status(500).json({
+            error: true,
+            success: false
+        }) 
+        }
+
+         return response.status(200).json({
+            error: false,
+            success: true,
+            data: products
+        })
+        
+    } catch (error) {
+         return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+    }
+}
+ 
  

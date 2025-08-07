@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import product from './src/routes/productRoute.js'
 import userRouter from './src/routes/user.route.js';
 import categoryRouter from './src/routes/category.route.js';
+import productRouter from './src/routes/product.route.js';
 
 const app = express();
 app.use(express.json());
@@ -24,6 +25,7 @@ app.use("/api/v1/",product);
 
 app.use("/api/user/", userRouter);
 app.use("/api/category/", categoryRouter)
+app.use("/api/product/", productRouter)
 
 
 

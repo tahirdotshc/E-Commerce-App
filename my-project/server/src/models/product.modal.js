@@ -51,11 +51,6 @@ const productschema = mongoose.Schema({
         type: String,
         default:''
     },
-    category:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-        required: true
-    },
     countInStock: {
         type: Number,
         required: true
