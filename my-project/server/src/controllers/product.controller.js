@@ -65,6 +65,25 @@ export const uploadImages = async (request, response) => {
 
 export async function createProduct(request, response){
     try {
+
+        const page = parseInt(request.query.page) || 1;
+        const perPage = parseInt(request.query.perPage);
+        const totalPosts = await ProductModel.countDocuments();
+        const totalPages = Math.ceil(totalPages / perPage);
+
+        if(page > totalPages) {
+            return response.status(404).json({
+                message: "Page not Found",
+                error:true,
+                success:false
+            });
+        }
+
+        const products = await ProductModel.find().populate("category")
+        .skip((page - 1) * perPage)
+        .limit(perPage)
+        .exec();
+
         let product = new ProductModel({
             name: request.body.name,
             description: request.body.description,
@@ -129,7 +148,9 @@ export async function getAllProducts(request, response){
          return response.status(200).json({
             error: false,
             success: true,
-            data: products
+            products: products,
+            totalPages: totalPages,
+            page: page
         })
         
     } catch (error) {
