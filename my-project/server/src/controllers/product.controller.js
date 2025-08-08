@@ -214,7 +214,6 @@ export async function getAllProductsByCatId(request, response){
     }
 }
  
-
 export async function getAllProductsByCatName(request, response){
     try {
 
@@ -261,5 +260,222 @@ export async function getAllProductsByCatName(request, response){
             error: true,
             success: false
         })
+    }
+}
+
+export async function getAllProductsBySubCatId(request, response){
+    try {
+
+         const page = parseInt(request.query.page) || 1;
+        const perPage = parseInt(request.query.perPage) || 1000;
+        const totalPosts = await ProductModel.countDocuments();
+        const totalPages = Math.ceil(totalPosts / perPage);
+
+        if(page > totalPages) {
+            return response.status(404).json({
+                message: "Page not Found",
+                error:true,
+                success:false
+            });
+        }
+
+        const products = await ProductModel.find({
+                subCatId:request.params.id
+            }
+        ).populate("category")
+        .skip((page - 1) * perPage)
+        .limit(perPage)
+        .exec();
+
+
+        if(!products){
+            response.status(500).json({
+            error: true,
+            success: false
+        }) 
+        }
+
+         return response.status(200).json({
+            error: false,
+            success: true,
+            products: products,
+            totalPages: totalPages,
+            page: page
+        })
+        
+    } catch (error) {
+         return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+    }
+}
+
+export async function getAllProductsBySubCatName(request, response){
+    try {
+
+         const page = parseInt(request.query.page) || 1;
+        const perPage = parseInt(request.query.perPage) || 1000;
+        const totalPosts = await ProductModel.countDocuments();
+        const totalPages = Math.ceil(totalPosts / perPage);
+
+        if(page > totalPages) {
+            return response.status(404).json({
+                message: "Page not Found",
+                error:true,
+                success:false
+            });
+        }
+
+        const products = await ProductModel.find({
+                subCat:request.query.subCat
+            }
+        ).populate("category")
+        .skip((page - 1) * perPage)
+        .limit(perPage)
+        .exec();
+
+
+        if(!products){
+            response.status(500).json({
+            error: true,
+            success: false
+        }) 
+        }
+
+         return response.status(200).json({
+            error: false,
+            success: true,
+            products: products,
+            totalPages: totalPages,
+            page: page
+        })
+        
+    } catch (error) {
+         return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+    }
+}
+
+export async function getAllProductsByThirdSubCatId(request, response){
+    try {
+
+         const page = parseInt(request.query.page) || 1;
+        const perPage = parseInt(request.query.perPage) || 1000;
+        const totalPosts = await ProductModel.countDocuments();
+        const totalPages = Math.ceil(totalPosts / perPage);
+
+        if(page > totalPages) {
+            return response.status(404).json({
+                message: "Page not Found",
+                error:true,
+                success:false
+            });
+        }
+
+        const products = await ProductModel.find({
+                thirdsubCatId:request.params.id
+            }
+        ).populate("category")
+        .skip((page - 1) * perPage)
+        .limit(perPage)
+        .exec();
+
+
+        if(!products){
+            response.status(500).json({
+            error: true,
+            success: false
+        }) 
+        }
+
+         return response.status(200).json({
+            error: false,
+            success: true,
+            products: products,
+            totalPages: totalPages,
+            page: page
+        })
+        
+    } catch (error) {
+         return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+    }
+}
+
+export async function getAllProductsByThirdSubCatName(request, response){
+    try {
+
+         const page = parseInt(request.query.page) || 1;
+        const perPage = parseInt(request.query.perPage) || 1000;
+        const totalPosts = await ProductModel.countDocuments();
+        const totalPages = Math.ceil(totalPosts / perPage);
+
+        if(page > totalPages) {
+            return response.status(404).json({
+                message: "Page not Found",
+                error:true,
+                success:false
+            });
+        }
+
+        const products = await ProductModel.find({
+                thirdsubCat:request.query.thirdsubCat
+            }
+        ).populate("category")
+        .skip((page - 1) * perPage)
+        .limit(perPage)
+        .exec();
+
+
+        if(!products){
+            response.status(500).json({
+            error: true,
+            success: false
+        }) 
+        }
+
+         return response.status(200).json({
+            error: false,
+            success: true,
+            products: products,
+            totalPages: totalPages,
+            page: page
+        })
+        
+    } catch (error) {
+         return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+    }
+}
+
+export async function getAllProductsByPrice(request, response){
+
+    let productsList = [];
+
+    if(request.query.catId !== "" && request.query.catId !== undefined) {
+        const productListArr = await ProductModel.find({
+            catId: request.query.catId,
+        }).populate("category");
+
+        productsList = productListArr;
+    }
+
+    if(request.query.subCatId !== "" && request.query.subCatId !== undefined) {
+        const productListArr = await ProductModel.find({
+            subCatId: request.query.subCatId,
+        }).populate("category");
+
+        productsList = productListArr;
     }
 }
