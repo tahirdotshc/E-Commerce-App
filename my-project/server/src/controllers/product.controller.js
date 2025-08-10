@@ -567,3 +567,61 @@ export async function getAllProductsByRating(request, response) {
         });
     }
 }
+
+export async function getProductsCount(request, response) {
+    try {
+        const productsCount = await ProductModel.countDocuments();
+
+        if(!productsCount) {
+           return response.status(500).json({
+            error: true,
+            success: false
+        }); 
+        }
+
+        return response.status(200).json({
+            error: false,
+            success: true,
+            productsCount: productsCount
+        });
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        });
+    }
+}
+
+export async function getAllFeaturedProducts(request, response){
+    try {
+
+         
+
+        const products = await ProductModel.find({
+                isFeatured: true
+            }
+        ).populate("category");
+
+
+        if(!products){
+            response.status(500).json({
+            error: true,
+            success: false
+        }) 
+        }
+
+         return response.status(200).json({
+            error: false,
+            success: true,
+            products: products
+        })
+        
+    } catch (error) {
+         return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+    }
+}
