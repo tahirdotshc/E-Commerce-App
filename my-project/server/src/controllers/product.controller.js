@@ -505,3 +505,65 @@ export async function getAllProductsByPrice(request, response){
         page:0
     })
 }
+
+export async function getAllProductsByRating(request, response) {
+    try {
+        const page = parseInt(request.query.page) || 1;
+        const perPage = parseInt(request.query.perPage) || 1000;
+
+        // Build filter object from query params
+        const filter = {};
+        if (request.query.rating) {
+            filter.rating = Number(request.query.rating);
+        }
+        if (request.query.catId) {
+            filter.catId = request.query.catId;
+        }
+        if (request.query.subCatId) {
+            filter.subCatId = request.query.subCatId;
+        }
+        if (request.query.thirdsubCatId) {
+            filter.thirdsubCatId = request.query.thirdsubCatId;
+        }
+
+        const totalPosts = await ProductModel.countDocuments(filter);
+        const totalPages = Math.max(Math.ceil(totalPosts / perPage), 1);
+
+        if (page > totalPages) {
+            return response.status(404).json({
+                message: "Page not found",
+                error: true,
+                success: false
+            });
+        }
+
+        const products = await ProductModel.find(filter)
+            .populate("category", "name _id") // select only needed fields
+            .skip((page - 1) * perPage)
+            .limit(perPage)
+            .exec();
+
+        if (products.length === 0) {
+            return response.status(404).json({
+                message: "No products found",
+                error: true,
+                success: false
+            });
+        }
+
+        return response.status(200).json({
+            error: false,
+            success: true,
+            products,
+            totalPages,
+            page
+        });
+
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        });
+    }
+}
