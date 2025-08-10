@@ -478,4 +478,30 @@ export async function getAllProductsByPrice(request, response){
 
         productsList = productListArr;
     }
+
+    if(request.query.thirdsubCatId !== "" && request.query.thirdsubCatId !== undefined) {
+        const productListArr = await ProductModel.find({
+            thirdsubCatId: request.query.thirdsubCatId,
+        }).populate("category");
+
+        productsList = productListArr;
+    }
+
+    const filteredProducts = productsList.filter((product)=> {
+        if(request.query.minPrice && product.price < parseInt(+request.query.minPrice)) {
+            return false;
+        }
+        if(request.query.maxPrice && product.price > parseInt(+request.query.maxPrice)){
+            return false;
+                }
+            return true;
+    });
+
+    return response.status(200).json({
+        error:false,
+        success: true,
+        products: filteredProducts,
+        totalPages: 0,
+        page:0
+    })
 }
